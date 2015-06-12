@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:component-scan base-package="cn.bg">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <!-- Curator的FactoryBean，Spring启动时创建Curator实例。 -->
+    <!--<bean id="zookeeperFactoryBean" class="cn.bg.zk.core.ZookeeperFactoryBean" lazy-init="false">-->
+        <!--<property name="zkConnectionString" value="hadoopmaster:2181"/>-->
+        <!--&lt;!&ndash; 设置zookeeper的事件监听者，本例是一个logback日志级别znode监听器 &ndash;&gt;-->
+        <!--<property name="listeners">-->
+            <!--<list>-->
+                <!--<bean class="cn.bg.zk.configuration.LogbackLevelListener">-->
+                    <!--<constructor-arg value="/zk_test/logbacklevel"/>-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+</beans>
