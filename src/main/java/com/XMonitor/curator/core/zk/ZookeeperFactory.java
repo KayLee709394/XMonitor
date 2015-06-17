@@ -1,28 +1,28 @@
-package com.XMonitor.curator.core;
+package com.XMonitor.curator.core.zk;
 
+import com.XMonitor.curator.core.ws.WebSocketHandler;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.ensemble.EnsembleProvider;
 import org.apache.curator.ensemble.fixed.FixedEnsembleProvider;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.api.GetChildrenBuilder;
 import org.apache.curator.framework.api.UnhandledErrorListener;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import org.apache.curator.framework.recipes.nodes.PersistentEphemeralNode;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.ZKPaths;
-import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,6 +81,10 @@ public class ZookeeperFactory implements FactoryBean<CuratorFramework>, Disposab
         return zkClient;
     }
 
+    private String[] getHosts(String zkConnectionString){
+        return zkConnectionString.split(",");
+    }
+
     private void addListener(PathChildrenCache cache)
     {
         // a PathChildrenCacheListener is optional. Here, it's used just to log changes
@@ -93,20 +97,22 @@ public class ZookeeperFactory implements FactoryBean<CuratorFramework>, Disposab
                 {
                     case CHILD_ADDED:
                     {
-                        System.out.println("Node added: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
+                        logger.info("Node added: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
+                        WebSocketHandler.pushState("Node added: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
                         break;
                     }
 
                     case CHILD_UPDATED:
                     {
-                        System.out.println("Node changed: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
+                        logger.info("Node changed: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
+                        WebSocketHandler.pushState("Node changed: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
                         break;
                     }
 
                     case CHILD_REMOVED:
                     {
                         logger.info("Node removed: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
-
+                        WebSocketHandler.pushState("Node removed: " + ZKPaths.getNodeFromPath(event.getData().getPath()));
                         break;
                     }
                 }

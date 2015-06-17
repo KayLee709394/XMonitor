@@ -1,7 +1,7 @@
 package com.XMonitor.curator.controller;
 
-import com.XMonitor.curator.core.ZookeeperFactory;
-import com.XMonitor.curator.zk.ZookeeperHosts;
+import com.XMonitor.curator.core.ws.WebSocketServer;
+import com.XMonitor.curator.core.zk.ZookeeperFactory;
 import org.apache.curator.framework.CuratorFramework;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * Created by ksy on 2015/6/11.
@@ -29,6 +27,7 @@ public class ZKController {
 //        ZookeeperHosts zh = new ZookeeperHosts(connectString);
 //        return zh.hostInfos();
         CuratorFramework client = zkFactory.createClient(connectString);
+        new WebSocketServer("172.18.1.54",8888).run();
         if(client != null){
             return "success";
         }

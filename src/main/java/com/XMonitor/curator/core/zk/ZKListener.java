@@ -1,4 +1,4 @@
-package com.XMonitor.curator.core;
+package com.XMonitor.curator.core.zk;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.NodeCache;
